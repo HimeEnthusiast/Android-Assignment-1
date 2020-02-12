@@ -13,6 +13,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    fun clearFields(amountField: EditText, tipField: EditText){
+        amountField.setText("")
+        tipField.setText("")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 //    Buttons
         val calculate = findViewById<Button>(R.id.calculateButton)
         val clear = findViewById<Button>(R.id.clearButton)
-//
+
 //    Spinners
         val chooseTip = findViewById<Spinner>(R.id.chooseTipPercent)
         val peopleNum = findViewById<Spinner>(R.id.setPeople)
@@ -52,7 +57,9 @@ class MainActivity : AppCompatActivity() {
             chooseTip.adapter = tipAdapter
         }
 
-//    Disabling TextEdits
+        // Event Handlers
+
+//      Disabling TextEdits
         chooseTip.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
@@ -63,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                setTip.isEnabled = !chooseTip.selectedItem.toString().equals("Other")
+                setTip.isEnabled = chooseTip.selectedItem.toString().equals("Other")
             }
         }
 
@@ -81,6 +88,59 @@ class MainActivity : AppCompatActivity() {
                 perPersonTitle.isVisible = !setPeople.selectedItem.toString().equals("1")
             }
         }
+
+        clear.setOnClickListener{
+            clearFields(setAmount, setTip)
+        }
+
+        fun calculateResult(
+            setAmount: EditText, chooseTip : Spinner, setTip: EditText, peopleNum: Spinner
+        ){
+            if (chooseTip.selectedItem == "Other") {
+                var tip = setTip.text.toString().toDouble()
+                var tipPercent : Double = tip / 100
+                var amount = setAmount.text.toString().toFloat()
+                var tipAmount = amount * tipPercent
+                var people = peopleNum.selectedItem.toString().toDouble()
+
+                var calculate = (amount + tipAmount) / people
+                totalIs.text = String.format("%.2f", amount + tipAmount)
+                tipIs.text = String.format("%.2f", tipAmount)
+                perPerson.text = String.format("%.2f", calculate)
+            }else{
+                var amount = setAmount.text.toString().toFloat()
+                var people = peopleNum.selectedItem.toString().toDouble()
+
+                val strPercent : String = chooseTip.selectedItem.toString()
+                val strPercentParts = strPercent.split("%")
+                var tipPercent = (strPercentParts[0].toFloat() / 100).toDouble()
+                var tipAmount = amount * tipPercent
+                var calculate = (amount + tipAmount) / people
+
+                totalIs.text = String.format("%.2f", amount + tipAmount)
+                tipIs.text = String.format("%.2f", tipAmount)
+                perPerson.text = String.format("%.2f", calculate)
+            }
+        }
+
+        calculate.setOnClickListener {
+            var toastMsg = ""
+            if(setAmount.text.toString() == ""){
+                toastMsg += "Require bill amount"
+                val errorToast = Toast.makeText(applicationContext, toastMsg, Toast.LENGTH_SHORT)
+                errorToast.show()
+            }else{
+                if(chooseTip.selectedItem.toString() == "Other" &&
+                    setTip.text.toString() == ""){
+                    toastMsg += "Require a tip amount"
+                    val errorToast = Toast.makeText(applicationContext, toastMsg, Toast.LENGTH_SHORT)
+                    errorToast.show()
+                }else{
+                    calculateResult(setAmount, chooseTip, setTip, peopleNum)
+                }
+            }
+        }
+
     }
 
 //    Validating
