@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Piantoni_Roberts_A1</string>
+    <string name="amount">Amount:</string>
+    <string name="tippercent">Tip %:</string>
+    <string name="numberofpeople"># of People:</string>
+    <string name="calculate">Calculate</string>
+    <string name="clear">Clear</string>
+    <string name="tipis">Tip is:</string>
+    <string name="totalis">Total is:</string>
+    <string name="perperson">Per Person:</string>
+    <string name="about">About</string>
+    <string-array name="people_amount">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="tip_amount">
+        <item>10%</item>
+        <item>15%</item>
+        <item>20%</item>
+        <item>Other</item>
+    </string-array>
 </resources>
